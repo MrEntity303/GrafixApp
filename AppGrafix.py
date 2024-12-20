@@ -3,7 +3,7 @@ from threading import Timer
 import dash  # type: ignore
 from dash import dcc, html  # type: ignore
 from dash.dependencies import Input, Output, State  # type: ignore
-from library.graphic import aggiorna_grafico, aggiorna_dropdown
+from library.graphic import aggiorna_grafico, aggiorna_dropdown, aggiorna_grafico_on
 from library.server import apri_browser, termina_server
 
 
@@ -32,42 +32,51 @@ def crea_app_dash():
             },
             accept='.csv'
         ),
-        dcc.Dropdown(
-            id='parametro-dropdown',
-            multi=True,
-            clearable=True,
-            style={'width': '50%', 'margin': '10px auto', 'display': 'none'}
-        ),
-        dcc.Dropdown(
-            id='secondo-parametro-dropdown',
-            multi=True,
-            clearable=True,
-            style={'width': '50%', 'margin': '10px auto', 'display': 'none'}
-        ),
-        dcc.Checklist(
-            id='normalizza-checklist',
-            options=[{'label': 'Normalizza i Dati', 'value': 'normalizza'}],
-            value=[],
-            style={'width': '50%', 'margin': '10px auto', 'display': 'none'}
-        ),
-        dcc.Graph(id='grafico-interattivo', style={'display': 'none'})
+        html.Div([
+            html.H3("Grafico 1: Parametri Generali", style={'textAlign': 'center'}),
+            dcc.Dropdown(
+                id='parametro-dropdown',
+                multi=True,
+                clearable=True,
+                style={'width': '50%', 'margin': '10px auto', 'display': 'none'}
+            ),
+            dcc.Dropdown(
+                id='secondo-parametro-dropdown',
+                multi=True,
+                clearable=True,
+                style={'width': '50%', 'margin': '10px auto', 'display': 'none'}
+            ),
+            dcc.Checklist(
+                id='normalizza-checklist',
+                options=[{'label': 'Normalizza i Dati', 'value': 'normalizza'}],
+                value=[],
+                style={'width': '50%', 'margin': '10px auto', 'display': 'none'}
+            ),
+            dcc.Graph(id='grafico-interattivo', style={'display': 'none'})
+        ]),
+        html.Div([
+            html.H3("Grafico 2: Tempo di Lavoro", style={'textAlign': 'center'}),
+            dcc.Dropdown(
+                id='parametro-on-dropdown',
+                multi=True,
+                clearable=True,
+                style={'width': '50%', 'margin': '10px auto', 'display': 'none'}
+            ),
+            dcc.Dropdown(
+                id='secondo-parametro-on-dropdown',
+                multi=True,
+                clearable=True,
+                style={'width': '50%', 'margin': '10px auto', 'display': 'none'}
+            ),
+            dcc.Checklist(
+                id='normalizza-on-checklist',
+                options=[{'label': 'Normalizza i Dati', 'value': 'normalizza'}],
+                value=[],
+                style={'width': '50%', 'margin': '10px auto', 'display': 'none'}
+            ),
+            dcc.Graph(id='grafico-interattivo-on', style={'display': 'none'})
+        ])
     ])
-
-    @app.callback(
-        [Output('parametro-dropdown', 'options'),
-        Output('parametro-dropdown', 'value'),
-        Output('secondo-parametro-dropdown', 'options'),
-        Output('secondo-parametro-dropdown', 'value'),
-        Output('normalizza-checklist', 'style'),
-        Output('parametro-dropdown', 'style'),
-        Output('secondo-parametro-dropdown', 'style'),
-        Output('grafico-interattivo', 'style')],
-        [Input('upload-data', 'contents')],
-        [State('upload-data', 'filename')]
-)
-    def update_dropdown(contents, filename):
-        # La funzione aggiorna_dropdown deve restituire una tupla con 8 valori
-        return aggiorna_dropdown(contents, filename)
 
 
     @app.callback(
@@ -80,6 +89,50 @@ def crea_app_dash():
     )
     def update_graph(parametro, secondo_parametro, normalizza, contents, filename):
         return aggiorna_grafico(parametro, secondo_parametro, normalizza, contents, filename)
+
+
+
+    @app.callback(
+        Output('grafico-interattivo-on', 'figure'),
+        [Input('parametro-on-dropdown', 'value'),
+         Input('secondo-parametro-on-dropdown', 'value'),
+         Input('normalizza-on-checklist', 'value')],
+        [State('upload-data', 'contents'),
+         State('upload-data', 'filename')]
+    )
+    def update_graph_on(parametro_on, secondo_parametro_on, normalizza_on, contents, filename):
+        return aggiorna_grafico_on(parametro_on, secondo_parametro_on, normalizza_on, contents, filename)
+
+    @app.callback(
+        [Output('parametro-dropdown', 'options'),
+         Output('parametro-dropdown', 'value'),
+         Output('secondo-parametro-dropdown', 'options'),
+         Output('secondo-parametro-dropdown', 'value'),
+         Output('normalizza-checklist', 'style'),
+         Output('parametro-dropdown', 'style'),
+         Output('secondo-parametro-dropdown', 'style'),
+         Output('grafico-interattivo', 'style')],
+        [Input('upload-data', 'contents')],
+        [State('upload-data', 'filename')]
+    )
+    def update_dropdown(contents, filename):
+        return aggiorna_dropdown(contents, filename)
+
+    @app.callback(
+        [Output('parametro-on-dropdown', 'options'),
+         Output('parametro-on-dropdown', 'value'),
+         Output('secondo-parametro-on-dropdown', 'options'),
+         Output('secondo-parametro-on-dropdown', 'value'),
+         Output('normalizza-on-checklist', 'style'),
+         Output('parametro-on-dropdown', 'style'),
+         Output('secondo-parametro-on-dropdown', 'style'),
+         Output('grafico-interattivo-on', 'style')],
+        [Input('upload-data', 'contents')],
+        [State('upload-data', 'filename')]
+    )
+    def update_dropdown_on(contents, filename):
+        return aggiorna_dropdown(contents, filename)
+
     
 
     Timer(1, apri_browser).start()
