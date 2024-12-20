@@ -1,0 +1,53 @@
+# Python Bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+env/
+.env/
+.venv/
+venv.bak/
+env.bak/
+
+# IDEs and Editors
+.idea/
+.vscode/
+
+# Distribution / Packaging
+.tox/
+.nox/
+.coverage
+.hypothesis/
+.pytest_cache/
+
+# PyInstaller
+dist/
+build/
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Pytest
+*.coveragerc
+*.tox
+*.nox
+.coverage
+.hypothesis/
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Sphinx documentation
+docs/_build/
+
+# Flake8
+.flake8
+
+# pyenv
+.python-version
