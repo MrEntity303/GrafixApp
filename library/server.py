@@ -1,5 +1,4 @@
 # Funzione per aprire il browser
-import signal
 import sys
 from threading import Timer
 import webbrowser
